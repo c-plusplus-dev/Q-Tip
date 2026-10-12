@@ -170,11 +170,15 @@ void Renderer::renderPolygon(Polygon polygon, bool filled)
 }
 
 void Renderer::renderText(const Font& font, const char* text, float x, float y, Color color) {
+    setBlendMode(RenderBlendMode::None);
     ::renderText(font, _renderer, text, color, x, y);
+    resetBlendMode();
 }
 
 void Renderer::renderTextCentered(const Font& font, const char* text, float x, float y, Color color) {
+    setBlendMode(RenderBlendMode::None);
     ::renderTextCentered(font, _renderer, text, color, x, y);
+    resetBlendMode();
 }
 
 void Renderer::renderTexture(Texture& texture, Rect srcRect, Rect dstRect) {
