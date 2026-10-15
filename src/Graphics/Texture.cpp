@@ -55,4 +55,8 @@ SDL_Texture* Texture::nativeHandle() const {
     return _texture;
 }
 
+Point Texture::size() const {
+    return {static_cast<float>(_texture->w), static_cast<float>(_texture->h)};
+}
+
 QTIP_CODE_END

@@ -8,6 +8,7 @@
 #include <filesystem>
 #include <Q-Tip/Config.h>
 
+#include "Q-Tip/Math/Point.h"
 #include "Q-Tip/Mods/Moddable.h"
 
 struct SDL_Texture;
@@ -35,6 +36,8 @@ public:
 
     [[nodiscard]] bool isValid() const;
     [[nodiscard]] SDL_Texture* nativeHandle() const;
+
+    [[nodiscard]] Point size() const;
 
 protected:
     Texture() = default;
