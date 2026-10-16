@@ -56,6 +56,8 @@ SDL_Texture* Texture::nativeHandle() const {
 }
 
 Point Texture::size() const {
+    if (!_texture)
+        return {0, 0};
     return {static_cast<float>(_texture->w), static_cast<float>(_texture->h)};
 }
 
