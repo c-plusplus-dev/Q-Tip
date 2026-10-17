@@ -72,7 +72,7 @@ inline void DrawFilledCircleQuarter(SDL_Renderer* renderer, int ccx, int ccy, in
     }
 }
 
-inline void DrawRoundedRect(SDL_Renderer* renderer, int red, int green, int blue, const SDL_FRect* rect, int r) {
+inline void DrawRoundedRect(SDL_Renderer* renderer, const SDL_FRect* rect, int r) {
     int x = static_cast<int>(rect->x);
     int y = static_cast<int>(rect->y);
     int w = static_cast<int>(rect->w);
@@ -92,7 +92,6 @@ inline void DrawRoundedRect(SDL_Renderer* renderer, int red, int green, int blue
     vertRect.w = static_cast<float>(w);
     vertRect.h = static_cast<float>(h - 2*r);
 
-    SDL_SetRenderDrawColor(renderer, red, green, blue, 255);
     SDL_RenderFillRect(renderer, &horzRect);
     SDL_RenderFillRect(renderer, &vertRect);
 

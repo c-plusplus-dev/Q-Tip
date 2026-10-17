@@ -119,9 +119,7 @@ void Renderer::renderRect(Rect rect, bool filled) {
 
 void Renderer::renderRoundedRect(Rect rect, int radius) {
     SDL_FRect sdlRect = rect;
-    uint8_t r, g, b, a;
-    SDL_GetRenderDrawColor(_renderer, &r, &g, &b, &a);
-    DrawRoundedRect(_renderer, r, g, b, &sdlRect, radius);
+    DrawRoundedRect(_renderer, &sdlRect, radius);
 }
 
 void Renderer::renderCircle(Circle circle, bool filled) {
