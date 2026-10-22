@@ -39,6 +39,10 @@ Renderer::Renderer(SDL_Window* window) {
         QTipLog(fmt("SDL_CreateGPURenderer failed: %s", SDL_GetError()), LOG_FATAL);
         exit(1);
     }
+    SDL_SetDefaultTextureScaleMode(
+        _renderer,
+        SDL_SCALEMODE_NEAREST
+    );
 }
 
 Renderer::~Renderer() {

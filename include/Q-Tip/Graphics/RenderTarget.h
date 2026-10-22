@@ -11,14 +11,15 @@
 #include "Q-Tip/Mods/Moddable.h"
 
 QTIP_CODE_BEGIN
+class Window;
 
 class RenderTarget : public Texture {
 MODDABLE_DERIVED(RenderTarget, Texture)
 
 public:
-    RenderTarget(Renderer& renderer, int width, int height);
+    RenderTarget(Window& renderer, int width, int height);
 
-    RenderTarget(Renderer& renderer, Point size);
+    RenderTarget(Window& window, Point size);
 };
 
 QTIP_CODE_END
