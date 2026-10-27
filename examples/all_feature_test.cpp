@@ -54,7 +54,7 @@ int main() {
     Font font("assets/JetBrainsMono-Regular.ttf", 16);
     Font largeFont("assets/JetBrainsMono-Regular.ttf", 28);
 
-    Texture texture(window.getRenderer(), "assets/weirdstockphoto5-1.jpg");
+    Texture texture(window, "assets/weirdstockphoto5-1.jpg");
 
     const bool textureOk = texture.isValid();
 

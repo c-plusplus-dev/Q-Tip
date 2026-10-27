@@ -13,13 +13,13 @@
 QTIP_CODE_BEGIN
 class Window;
 
-class RenderTarget : public Texture {
-MODDABLE_DERIVED(RenderTarget, Texture)
+class RenderTexture : public Texture {
+MODDABLE_DERIVED(RenderTexture, Texture)
 
 public:
-    RenderTarget(Window& renderer, int width, int height);
+    RenderTexture(Window& window, int width, int height);
 
-    RenderTarget(Window& window, Point size);
+    RenderTexture(Window& window, Point size);
 };
 
 QTIP_CODE_END

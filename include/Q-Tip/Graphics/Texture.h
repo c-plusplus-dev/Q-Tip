@@ -18,12 +18,13 @@ QTIP_CODE_BEGIN
 namespace fs = std::filesystem;
 
 class Renderer;
+class Window;
 
 class Texture {
 MODDABLE_ROOT(Texture)
 
 public:
-    Texture(const Renderer& renderer, const fs::path& path);
+    Texture(Window& window, const fs::path& path);
     ~Texture();
 
     Texture(const Texture&) = delete;

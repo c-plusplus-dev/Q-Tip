@@ -2,7 +2,7 @@
 // Created by Ayaan on 2026-09-07.
 //
 
-#include "Q-Tip/Graphics/RenderTarget.h"
+#include "Q-Tip/Graphics/RenderTexture.h"
 
 #include <SDL3/SDL_pixels.h>
 #include <SDL3/SDL_render.h>
@@ -13,9 +13,15 @@
 
 QTIP_CODE_BEGIN
 
-RenderTarget::RenderTarget(Window& window, int width, int height) {
+RenderTexture::RenderTexture(Window& window, int width, int height) {
     auto& renderer = window.getRenderer();
-    _texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, width, height);
+    _texture = SDL_CreateTexture(
+        renderer,
+        SDL_PIXELFORMAT_RGBA8888,
+        SDL_TEXTUREACCESS_TARGET,
+        width,
+        height
+    );
     if (!_texture) {
         QTipLog(fmt("SDL_CreateTexture(..., SDL_TEXTUREACCESS_TARGET, ...) failed: %s", SDL_GetError()), LOG_ERROR);
         return;
@@ -30,9 +36,15 @@ RenderTarget::RenderTarget(Window& window, int width, int height) {
     renderer.resetTarget();
 }
 
-RenderTarget::RenderTarget(Window& window, Point size) {
+RenderTexture::RenderTexture(Window& window, Point size) {
     auto& renderer = window.getRenderer();
-    _texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, size.x, size.y);
+    _texture = SDL_CreateTexture(
+        renderer,
+        SDL_PIXELFORMAT_RGBA8888,
+        SDL_TEXTUREACCESS_TARGET,
+        static_cast<int>(size.x),
+        static_cast<int>(size.y)
+    );
     if (!_texture) {
         QTipLog(fmt("SDL_CreateTexture(..., SDL_TEXTUREACCESS_TARGET, ...) failed: %s", SDL_GetError()), LOG_ERROR);
         return;

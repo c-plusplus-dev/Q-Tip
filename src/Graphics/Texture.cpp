@@ -6,10 +6,12 @@
 #include "include/Helpers.h"
 #include <Q-Tip/Logger/Log.h>
 
+#include "Q-Tip/Window/Window.h"
+
 QTIP_CODE_BEGIN
 
-Texture::Texture(const Renderer& renderer, const std::filesystem::path& path) {
-    _texture = IMG_LoadTexture(renderer, path.string().c_str());
+Texture::Texture(Window& window, const std::filesystem::path& path) {
+    _texture = IMG_LoadTexture(window.getRenderer(), path.string().c_str());
 
     if (!_texture) {
         QTipLog(fmt("IMG_LoadTexture failed: %s", SDL_GetError()), LOG_ERROR);

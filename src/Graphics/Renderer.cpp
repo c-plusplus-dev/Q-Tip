@@ -8,7 +8,7 @@
 #include "../include/Helpers.h"
 #include <Q-Tip/Logger/Log.h>
 #include "earcut.hpp"
-#include "Q-Tip/Graphics/RenderTarget.h"
+#include "Q-Tip/Graphics/RenderTexture.h"
 #include "Q-Tip/Mods/ModLoader/ModLoader.h"
 #include "Q-Tip/Window/Window.h"
 
@@ -204,7 +204,7 @@ void Renderer::renderTexture(Texture& texture, Rect srcRect, Rect dstRect) {
     );
 }
 
-void Renderer::setTarget(RenderTarget& renderTarget) {
+void Renderer::setTarget(RenderTexture& renderTarget) {
     _renderTargetStack.push_back(SDL_GetRenderTarget(_renderer));
     SDL_SetRenderTarget(_renderer, renderTarget.nativeHandle());
 }

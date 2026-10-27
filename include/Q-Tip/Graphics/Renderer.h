@@ -23,7 +23,7 @@ struct SDL_Rect;
 
 QTIP_CODE_BEGIN
 
-class RenderTarget;
+class RenderTexture;
 
 class Texture;
 
@@ -75,7 +75,7 @@ public:
 
     void renderTexture(Texture& texture, Rect srcRect, Rect dstRect);
 
-    void setTarget(RenderTarget& renderTarget);
+    void setTarget(RenderTexture& renderTarget);
     void resetTarget();
 
     void setClip(const Rect& clipRect);

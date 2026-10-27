@@ -40,8 +40,8 @@ add_library(QTip STATIC
         src/Graphics/Color.cpp
         src/Graphics/Shapes/Rect.cpp
         include/Q-Tip/Types/Lazy.h
-        src/Graphics/RenderTarget.cpp
-        include/Q-Tip/Graphics/RenderTarget.h
+        src/Graphics/RenderTexture.cpp
+        include/Q-Tip/Graphics/RenderTexture.h
         include/Q-Tip/Mods/Moddable.h
         include/Q-Tip/Mods/Mod.h
         src/Mods/ModLoader/ModLoader.cpp
