@@ -89,11 +89,6 @@ namespace {
 int main() {
     Window window("Q-Tip Shape Test", 800, 600);
 
-    Font font("assets/JetBrainsMono-Regular.ttf", 16);
-    Font largeFont("assets/JetBrainsMono-Regular.ttf", 28);
-
-    Texture texture(window.getRenderer(), "assets/weirdstockphoto5-1.jpg");
-
     Clock clock;
 
     std::vector<MovingTriangle> triangles;
