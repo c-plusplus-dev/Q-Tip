@@ -13,8 +13,6 @@
 
 #include "EventType.h"
 
-union SDL_Event;
-
 QTIP_CODE_BEGIN
 
 enum class DisplayOrientation {

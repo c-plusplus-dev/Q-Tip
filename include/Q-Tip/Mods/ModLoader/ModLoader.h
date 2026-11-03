@@ -12,8 +12,6 @@
 #include "Q-Tip/Events/Event.h"
 #include "Q-Tip/Mods/Mod.h"
 
-union SDL_Event;
-
 QTIP_CODE_BEGIN
 
 template <typename M>

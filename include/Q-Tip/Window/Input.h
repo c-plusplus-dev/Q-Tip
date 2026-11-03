@@ -9,8 +9,6 @@
 #include "Q-Tip/Events/Event.h"
 #include "Q-Tip/Mods/Moddable.h"
 
-union SDL_Event;
-
 QTIP_CODE_BEGIN
 
 class Window;

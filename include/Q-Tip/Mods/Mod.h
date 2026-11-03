@@ -7,8 +7,7 @@
 #include <string>
 #include <Q-Tip/Config.h>
 #include <Q-Tip/Logger/Log.h>
-
-union SDL_Event;
+#include "Q-Tip/Events/Event.h"
 
 QTIP_CODE_BEGIN
 

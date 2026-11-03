@@ -235,6 +235,14 @@ void Input::processEvent(const Event& event)
             break;
         }
 
+        case EventType::TextEntered: {
+            _text.append(
+               event.textInput.text.data(),
+               event.textInput.length
+           );
+            break;
+        }
+
         default:
             break;
     }
