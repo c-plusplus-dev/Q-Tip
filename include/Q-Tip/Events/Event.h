@@ -64,10 +64,18 @@ struct MouseMoveEvent {
     std::uint32_t buttons;
 };
 
+typedef enum MouseButton {
+    Left = 1,
+    Middle,
+    Right,
+    X1,
+    X2
+} MouseButton;
+
 struct MouseButtonEvent {
     Point position;
 
-    std::uint8_t button;
+    MouseButton button;
     std::uint8_t clicks;
 };
 

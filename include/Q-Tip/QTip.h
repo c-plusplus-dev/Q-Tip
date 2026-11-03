@@ -14,6 +14,8 @@
 
 #include <Q-Tip/Window/Window.h>
 
+#include "Events/Event.h"
+
 union SDL_Event;
 
 QTIP_CODE_BEGIN
@@ -30,7 +32,7 @@ private:
 
     ~QTipRuntime();
 
-    SDL_Event* _event;
+    std::deque<Event> _events;
 
     std::vector<Window*> _windows;
 

@@ -47,7 +47,7 @@ namespace {
 }
 
 int main() {
-    std::cerr << "========== MAIN ==========\n";
+    std::cerr << "<========== MAIN ==========>\n";
 
     Window window("Q-Tip Feature Test - initializing", 800, 600);
 

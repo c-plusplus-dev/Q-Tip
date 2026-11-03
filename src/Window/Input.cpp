@@ -2,6 +2,8 @@
 #include <utility>
 #include <SDL3/SDL.h>
 
+#include "Q-Tip/Events/Event.h"
+
 QTIP_CODE_BEGIN
 
 namespace {
@@ -123,10 +125,10 @@ void Input::beginFrame()
     _mouseDeltaY = 0.0f;
 }
 
-void Input::processEvent(const SDL_Event& event)
+void Input::processEvent(const Event& event)
 {
     switch (event.type) {
-        case SDL_EVENT_KEY_DOWN:
+        case EventType::KeyPressed:
         {
             const auto key = static_cast<std::size_t>(event.key.scancode);
 
@@ -143,7 +145,7 @@ void Input::processEvent(const SDL_Event& event)
             break;
         }
 
-        case SDL_EVENT_KEY_UP:
+        case EventType::KeyReleased:
         {
             const auto key = static_cast<std::size_t>(event.key.scancode);
 
@@ -155,39 +157,39 @@ void Input::processEvent(const SDL_Event& event)
             break;
         }
 
-        case SDL_EVENT_MOUSE_MOTION:
+        case EventType::MouseMoved:
         {
-            _mouseX = event.motion.x;
-            _mouseY = event.motion.y;
+            _mouseX = event.mouseMove.position.x;
+            _mouseY = event.mouseMove.position.y;
 
-            _mouseDeltaX += event.motion.xrel;
-            _mouseDeltaY += event.motion.yrel;
+            _mouseDeltaX += event.mouseMove.delta.x;
+            _mouseDeltaY += event.mouseMove.delta.y;
             break;
         }
 
-        case SDL_EVENT_MOUSE_BUTTON_DOWN:
+        case EventType::MouseButtonPressed:
         {
             std::size_t button;
 
-            switch (event.button.button) {
-                case SDL_BUTTON_LEFT:
-                    button = mouseButtonIndex(MouseButton::Left);
+            switch (event.mouseButton.button) {
+                case Left:
+                    button = mouseButtonIndex(Left);
                     break;
 
-                case SDL_BUTTON_MIDDLE:
-                    button = mouseButtonIndex(MouseButton::Middle);
+                case Middle:
+                    button = mouseButtonIndex(Middle);
                     break;
 
-                case SDL_BUTTON_RIGHT:
-                    button = mouseButtonIndex(MouseButton::Right);
+                case Right:
+                    button = mouseButtonIndex(Right);
                     break;
 
-                case SDL_BUTTON_X1:
-                    button = mouseButtonIndex(MouseButton::X1);
+                case X1:
+                    button = mouseButtonIndex(X1);
                     break;
 
-                case SDL_BUTTON_X2:
-                    button = mouseButtonIndex(MouseButton::X2);
+                case X2:
+                    button = mouseButtonIndex(X2);
                     break;
 
                 default:
@@ -199,28 +201,28 @@ void Input::processEvent(const SDL_Event& event)
             break;
         }
 
-        case SDL_EVENT_MOUSE_BUTTON_UP:
+        case EventType::MouseButtonReleased:
         {
             std::size_t button;
 
-            switch (event.button.button) {
-                case SDL_BUTTON_LEFT:
+            switch (event.mouseButton.button) {
+                case Left:
                     button = mouseButtonIndex(MouseButton::Left);
                     break;
 
-                case SDL_BUTTON_MIDDLE:
+                case Middle:
                     button = mouseButtonIndex(MouseButton::Middle);
                     break;
 
-                case SDL_BUTTON_RIGHT:
+                case Right:
                     button = mouseButtonIndex(MouseButton::Right);
                     break;
 
-                case SDL_BUTTON_X1:
+                case X1:
                     button = mouseButtonIndex(MouseButton::X1);
                     break;
 
-                case SDL_BUTTON_X2:
+                case X2:
                     button = mouseButtonIndex(MouseButton::X2);
                     break;
 

@@ -219,19 +219,19 @@ Input& Window::input()
     return _input;
 }
 
-void Window::handleEvent(const SDL_Event& event)
+void Window::handleEvent(const Event& event)
 {
     _input.processEvent(event);
 
     switch (event.type) {
-    case SDL_EVENT_QUIT:
-    case SDL_EVENT_WINDOW_CLOSE_REQUESTED:
+    case EventType::ApplicationQuit:
+    case EventType::WindowCloseRequested:
         _shouldClose = true;
         break;
 
-    case SDL_EVENT_WINDOW_RESIZED:
-        _width = static_cast<float>(event.window.data1);
-        _height = static_cast<float>(event.window.data2);
+    case EventType::WindowResized:
+        _width = static_cast<float>(event.window.width);
+        _height = static_cast<float>(event.window.height);
         break;
 
     default:

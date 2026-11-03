@@ -23,7 +23,7 @@ enum class EventType {
     WindowRestored,
     WindowFocused,
     WindowUnfocused,
-    WindowClosed,
+    WindowCloseRequested,
 
     // Keyboard
     KeyPressed,

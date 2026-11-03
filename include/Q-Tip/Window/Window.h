@@ -9,6 +9,7 @@
 #include <Q-Tip/Config.h>
 #include <Q-Tip/Graphics/Renderer.h>
 
+#include "Q-Tip/Events/Event.h"
 #include "Q-Tip/Window/Input.h"
 
 struct SDL_Window;
@@ -56,7 +57,7 @@ public:
 
     Input& input();
 
-    void handleEvent(const SDL_Event& event);
+    void handleEvent(const Event& event);
 
     void beginFrame();
 

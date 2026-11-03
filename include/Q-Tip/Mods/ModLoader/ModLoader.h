@@ -9,6 +9,7 @@
 #include <vector>
 #include <memory>
 
+#include "Q-Tip/Events/Event.h"
 #include "Q-Tip/Mods/Mod.h"
 
 union SDL_Event;
@@ -44,7 +45,7 @@ private:
 
     std::vector<std::unique_ptr<Mod>> mods;
 
-    static void handleEvent(const SDL_Event& event);
+    static void handleEvent(const Event& event);
 
     static void beforePresent(Window& window);
 

@@ -6,6 +6,7 @@
 
 #include <SDL3/SDL_events.h>
 
+#include "Q-Tip/Events/Event.h"
 #include "Q-Tip/Mods/Mod.h"
 
 QTIP_CODE_BEGIN
@@ -18,7 +19,7 @@ ModLoader::~ModLoader() {
     }
 }
 
-void ModLoader::handleEvent(const SDL_Event& event) {
+void ModLoader::handleEvent(const Event& event) {
     for (const auto& mod : instance.mods) {
         mod->handleEvent(event);
     }

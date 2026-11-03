@@ -56,23 +56,23 @@ namespace {
         return buttons;
     }
 
-    std::optional<std::uint8_t> translateMouseButton(std::uint8_t button)
+    std::optional<MouseButton> translateMouseButton(std::uint8_t button)
     {
         switch (button) {
             case SDL_BUTTON_LEFT:
-                return 0;
+                return Left;
 
             case SDL_BUTTON_MIDDLE:
-                return 1;
+                return Middle;
 
             case SDL_BUTTON_RIGHT:
-                return 2;
+                return Right;
 
             case SDL_BUTTON_X1:
-                return 3;
+                return X1;
 
             case SDL_BUTTON_X2:
-                return 4;
+                return X2;
 
             default:
                 return std::nullopt;
@@ -262,7 +262,7 @@ std::optional<Event> translateEvent(const SDL_Event& event)
                     break;
 
                 case SDL_EVENT_WINDOW_CLOSE_REQUESTED:
-                    type = EventType::WindowClosed;
+                    type = EventType::WindowCloseRequested;
                     break;
 
                 default:

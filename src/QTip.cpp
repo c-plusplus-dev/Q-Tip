@@ -25,35 +25,35 @@ QTipRuntime::QTipRuntime() {
         QTipLog(fmt("TTF_Init failed: %s", SDL_GetError()), LOG_FATAL);
         exit(1);
     }
-
-    _event = new SDL_Event;
 }
 
 QTipRuntime::~QTipRuntime() {
     TTF_Quit();
     SDL_Quit();
-
-    delete _event;
-    _event = nullptr;
 }
 
 void QTipRuntime::pollEvents() {
     for (Window* window : instance._windows)
         window->beginFrame();
 
-    while (SDL_PollEvent(instance._event)) {
-        const SDL_Event& event = *instance._event;
+    SDL_Event e;
+    while (SDL_PollEvent(&e)) {
+        if (auto event = translateEvent(e)) {
+            instance._events.push_back(event.value());
+        } else
+            continue;
+        auto& event = instance._events.back();
 
         ModLoader::handleEvent(event);
 
-        if (event.type == SDL_EVENT_QUIT) {
+        if (e.type == SDL_EVENT_QUIT) {
             for (Window* window : instance._windows)
                 window->handleEvent(event);
 
             continue;
         }
 
-        SDL_WindowID windowID = SDL_GetWindowID(SDL_GetWindowFromEvent(&event));
+        std::uint32_t windowID = event.windowID;
 
         for (Window* window : instance._windows) {
             if (window->_id == windowID) {

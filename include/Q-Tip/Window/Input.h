@@ -6,19 +6,12 @@
 #include <array>
 #include <string>
 #include "Keys.h"
+#include "Q-Tip/Events/Event.h"
 #include "Q-Tip/Mods/Moddable.h"
 
 union SDL_Event;
 
 QTIP_CODE_BEGIN
-
-enum class MouseButton {
-    Left,
-    Middle,
-    Right,
-    X1,
-    X2
-};
 
 class Window;
 
@@ -63,7 +56,7 @@ public:
 
 private:
     void beginFrame();
-    void processEvent(const SDL_Event& event);
+    void processEvent(const Event& event);
 
     static constexpr std::size_t KeyCount =
         static_cast<std::size_t>(Key::Key_COUNT);

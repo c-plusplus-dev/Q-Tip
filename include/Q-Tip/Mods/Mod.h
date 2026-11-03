@@ -35,7 +35,7 @@ public:
     virtual void init() {}
     virtual void shutdown() {}
 
-    virtual void handleEvent(const SDL_Event& event) {}
+    virtual void handleEvent(const Event& event) {}
 
     virtual void beforePresent(Window& window) {}
 
