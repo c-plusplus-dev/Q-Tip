@@ -1,6 +1,5 @@
 #include <Q-Tip/Window/Input.h>
 #include <utility>
-#include <SDL3/SDL.h>
 
 #include "Q-Tip/Events/Event.h"
 

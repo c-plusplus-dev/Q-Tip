@@ -4,8 +4,6 @@
 
 #include "Q-Tip/Mods/ModLoader/ModLoader.h"
 
-#include <SDL3/SDL_events.h>
-
 #include "Q-Tip/Events/Event.h"
 #include "Q-Tip/Mods/Mod.h"
 

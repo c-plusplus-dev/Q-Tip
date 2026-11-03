@@ -16,8 +16,6 @@
 
 #include "Events/Event.h"
 
-union SDL_Event;
-
 QTIP_CODE_BEGIN
 
 class QTipRuntime {

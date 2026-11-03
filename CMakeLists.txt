@@ -49,7 +49,6 @@ add_library(QTip STATIC
         include/Q-Tip/Logger/Log.h
         include/Q-Tip/Events/Event.h
         include/Q-Tip/Events/EventType.h
-        src/Events/Event.cpp
         src/include/Q-TipHelpers.h
 )
 
