@@ -158,8 +158,6 @@ struct Event {
     };
 };
 
-std::optional<Event> translateEvent(const SDL_Event& event);
-
 QTIP_CODE_END
 
 #endif // QTIP_EVENTS_H

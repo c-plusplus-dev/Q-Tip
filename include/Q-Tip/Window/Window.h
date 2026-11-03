@@ -13,7 +13,6 @@
 #include "Q-Tip/Window/Input.h"
 
 struct SDL_Window;
-union SDL_Event;
 
 QTIP_CODE_BEGIN
 
@@ -65,7 +64,6 @@ public:
 
 private:
     SDL_Window* _window = nullptr;
-    SDL_Event* _event = nullptr;
     std::optional<Renderer> _renderer;
     Input _input{};
     float _width = 0;

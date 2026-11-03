@@ -50,6 +50,7 @@ add_library(QTip STATIC
         include/Q-Tip/Events/Event.h
         include/Q-Tip/Events/EventType.h
         src/Events/Event.cpp
+        src/include/Q-TipHelpers.h
 )
 
 add_library(QTip::QTip ALIAS QTip)

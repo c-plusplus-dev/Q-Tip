@@ -9,6 +9,8 @@
 
 #include "include/Helpers.h"
 #include <Q-Tip/Logger/Log.h>
+
+#include "include/Q-TipHelpers.h"
 #include "Q-Tip/Mods/ModLoader/ModLoader.h"
 
 QTIP_CODE_BEGIN
@@ -37,6 +39,7 @@ void QTipRuntime::pollEvents() {
         window->beginFrame();
 
     SDL_Event e;
+    instance._events.clear();
     while (SDL_PollEvent(&e)) {
         if (auto event = translateEvent(e)) {
             instance._events.push_back(event.value());

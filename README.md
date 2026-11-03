@@ -1,13 +1,15 @@
 # Q-Tip
 
->WARNING: I have used AI in this project. Sorry. I am not that good at coding, but I can do it. I am sincerely sorry.
+>WARNING: I have used AI in this project. Sorry. I am good at coding, but I use AI for boring stuff. I am sincerely sorry.
 
 Q-Tip is my little project, this was never thought to be used a lot by many people.
 I just had an idea. And I made it. Hope you like it a little at least.
 
->**NOTE:** Versioning doesn't work the way you think. It's `major.major.minor`. Weird, isn't it?
+>**NOTE:** Versioning doesn't work the way you think. It's just a bunch of numbers spaced by dots.
 
 >**NOTE:** This README is outdated, please wait until I want to make the docs when Q-Tip is big enough. Why I have not yet made documentation is due to me thinking that no one will notice Q-Tip at all, meaning no one will try to use Q-Tip. If you want to test or use Q-Tip, please read through the source code first.
+
+>**NOTE:** Docs are at https://c-plusplus-dev.github.io/docs except I haven't written any documentation yet.
 
 It is a small 2D graphics library written in modern C++ and based on SDL3.
 

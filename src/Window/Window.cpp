@@ -31,7 +31,6 @@ Window::~Window()
 
 Window::Window(Window&& other) noexcept
     : _window(other._window),
-      _event(other._event),
       _renderer(std::move(other._renderer)),
       _width(other._width),
       _height(other._height),
@@ -42,7 +41,6 @@ Window::Window(Window&& other) noexcept
     QTipRuntime::replaceWindow(&other, this);
 
     other._window = nullptr;
-    other._event = nullptr;
     other._width = 0;
     other._height = 0;
     other._shouldClose = true;
@@ -64,7 +62,6 @@ Window& Window::operator=(Window&& other) noexcept
     destroy();
 
     _window = other._window;
-    _event = other._event;
     _renderer = std::move(other._renderer);
     _width = other._width;
     _height = other._height;
@@ -78,7 +75,6 @@ Window& Window::operator=(Window&& other) noexcept
     QTipRuntime::replaceWindow(&other, this);
 
     other._window = nullptr;
-    other._event = nullptr;
     other._width = 0;
     other._height = 0;
     other._shouldClose = true;
@@ -93,9 +89,6 @@ void Window::destroy()
         _renderer->destroy();
         _renderer.reset();
     }
-
-    delete _event;
-    _event = nullptr;
 
     if (!_window) {
         return;
@@ -125,8 +118,6 @@ void Window::open(const char* title, float width, float height) {
 
     _renderer.emplace(_window);
     _renderer.value()._window = this;
-
-    _event = new SDL_Event;
 
     SDL_StartTextInput(_window);
 
