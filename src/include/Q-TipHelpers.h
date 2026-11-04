@@ -289,7 +289,7 @@ inline std::optional<Event> translateEvent(const SDL_Event& event)
             );
 
             result.key = {
-                static_cast<std::int32_t>(event.key.key),
+                static_cast<Key>(event.key.key),
                 static_cast<std::int32_t>(event.key.scancode),
                 static_cast<std::uint16_t>(event.key.mod),
                 event.key.repeat

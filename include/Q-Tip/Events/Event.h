@@ -12,10 +12,10 @@
 #include "Q-Tip/Math/Point.h"
 
 #include "EventType.h"
+#include "Q-Tip/Window/Keys.h"
 
 QTIP_CODE_BEGIN
-
-enum class DisplayOrientation {
+    enum class DisplayOrientation {
     Unknown,
     Landscape,
     LandscapeFlipped,
@@ -42,7 +42,7 @@ struct WindowEvent {
 };
 
 struct KeyEvent {
-    std::int32_t key;
+    Key key;
     std::int32_t scancode;
 
     std::uint16_t modifiers;
