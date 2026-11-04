@@ -6,6 +6,8 @@
 #define QTIP_QTIPRUNTIME_H
 
 #include <deque>
+#include <optional>
+#include <vector>
 
 #include "Events/Event.h"
 
