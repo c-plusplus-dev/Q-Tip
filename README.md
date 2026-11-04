@@ -1,6 +1,8 @@
 # Q-Tip
 
->WARNING: I have used AI in this project. Sorry. I am good at coding, but I use AI for boring stuff. I am sincerely sorry.
+>**WARNING:** I have used AI in this project. Sorry. I am good at coding, but I use AI for boring stuff. I am sincerely sorry.
+
+>**WARNING:** I will push updates here and there and randomly update homebrew. I recommend to use -HEAD when installing Q-Tip.
 
 Q-Tip is my little project, this was never thought to be used a lot by many people.
 I just had an idea. And I made it. Hope you like it a little at least.

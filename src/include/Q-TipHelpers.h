@@ -379,7 +379,11 @@ inline std::optional<Event> translateEvent(const SDL_Event& event)
                 event.wheel.timestamp
             );
 
-            result.mouseScroll = {{x, y}};
+            result.mouseScroll = {};
+
+            result.mouseScroll.position = {event.wheel.mouse_x, event.wheel.mouse_y};
+
+            result.mouseScroll.offset = {x, y};
 
             return result;
         }
@@ -414,6 +418,8 @@ inline std::optional<Event> translateEvent(const SDL_Event& event)
                 result.fileDrop.length,
                 event.drop.data
             );
+
+            result.fileDrop.position = {event.drop.x, event.drop.y};
 
             return result;
         }

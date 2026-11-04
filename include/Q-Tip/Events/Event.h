@@ -78,12 +78,16 @@ struct MouseButtonEvent {
 };
 
 struct MouseScrollEvent {
+    Point position;
+
     Point offset;
 };
 
 struct FileDropEvent {
     std::array<char, 1024> path;
     std::uint32_t length;
+
+    Point position;
 };
 
 struct ClipboardEvent {
