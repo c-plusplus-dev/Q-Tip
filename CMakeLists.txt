@@ -16,7 +16,6 @@ find_package(SDL3_image REQUIRED)
 include(GNUInstallDirs)
 
 add_library(QTip STATIC
-        src/QTip.cpp
         include/Q-Tip/QTip.h
         include/Q-Tip/Config.h
         src/Window/Window.cpp
@@ -50,6 +49,9 @@ add_library(QTip STATIC
         include/Q-Tip/Events/Event.h
         include/Q-Tip/Events/EventType.h
         src/include/Q-TipHelpers.h
+        src/QTipRuntime.cpp
+        include/Q-Tip/QTipRuntime.h
+        src/include/stdHelpers.h
 )
 
 add_library(QTip::QTip ALIAS QTip)

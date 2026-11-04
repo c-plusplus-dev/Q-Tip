@@ -58,6 +58,9 @@ public:
 
     void handleEvent(const Event& event);
 
+    [[nodiscard]] std::optional<Event> pollEvent() const;
+    [[nodiscard]] const Event* peekEvent() const;
+
     void beginFrame();
 
     operator SDL_Window*() const;

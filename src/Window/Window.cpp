@@ -12,7 +12,7 @@
 #include <SDL3/SDL.h>
 
 #include "Q-Tip/Mods/ModLoader/ModLoader.h"
-#include "Q-Tip/QTip.h"
+#include "Q-Tip/QTipRuntime.h"
 
 QTIP_CODE_BEGIN
 
@@ -228,6 +228,14 @@ void Window::handleEvent(const Event& event)
     default:
         break;
     }
+}
+
+std::optional<Event> Window::pollEvent() const {
+    return QTipRuntime::pollEvent(this);
+}
+
+const Event* Window::peekEvent() const {
+    return QTipRuntime::peekEvent(this);
 }
 
 void Window::beginFrame()

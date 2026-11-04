@@ -65,7 +65,7 @@ int main() {
     bool restoredWindow = false;
 
     while (!window.shouldClose()) {
-        QTipRuntime::pollEvents();
+        QTipRuntime::fetchEvents();
 
         const uint64_t elapsed = clock.now();
         const float t = static_cast<float>(elapsed) / 1000.0f;
