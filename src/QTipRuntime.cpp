@@ -72,14 +72,10 @@ std::vector<Window*> QTipRuntime::windows() {
     return instance._windows;
 }
 
-std::deque<Event>& QTipRuntime::events() {
-    return instance._events;
-}
-
 std::optional<Event> QTipRuntime::pollEvent() {
     if (instance._events.empty())
         return std::nullopt;
-    return extract_front(instance._events);
+    return Detail::extract_front(instance._events);
 }
 
 const Event* QTipRuntime::peekEvent() {
@@ -108,22 +104,20 @@ void QTipRuntime::replaceWindow(Window* oldWindow, Window* newWindow) {
 }
 
 std::optional<Event> QTipRuntime::pollEvent(const Window* window) {
-    auto front = instance._events.begin();
-    auto back = instance._events.end();
-    for (; back != front; --back) {
-        if (back->windowID == window->_id)
-            return extract(instance._events, back);
+    for (auto it = instance._events.begin(); it != instance._events.end(); ++it) {
+        if (it->windowID == window->_id)
+            return Detail::extract(instance._events, it);
     }
-    return nullopt;
+
+    return std::nullopt;
 }
 
 const Event* QTipRuntime::peekEvent(const Window* window) {
-    auto front = instance._events.begin();
-    auto back = instance._events.end();
-    for (; back != front; --back) {
-        if (back->windowID == window->_id)
-            return &*back;
+    for (auto& _event : instance._events) {
+        if (_event.windowID == window->_id)
+            return &_event;
     }
+
     return nullptr;
 }
 

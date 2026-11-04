@@ -20,8 +20,6 @@ public:
 
     static std::vector<Window*> windows();
 
-    static std::deque<Event>& events();
-
     static std::optional<Event> pollEvent();
     static const Event* peekEvent();
 

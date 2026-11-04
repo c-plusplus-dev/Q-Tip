@@ -9,49 +9,51 @@
 #include <ranges>
 #include <utility>
 
-template <std::ranges::input_range range_T, typename iter_T>
-    requires requires(range_T& r, iter_T i) {
-        *i;
+namespace QTip::Detail {
+    template <std::ranges::input_range range_T, typename iter_T>
+        requires requires(range_T& r, iter_T i) {
+            *i;
+            r.erase(i);
+        }
+    [[nodiscard]] constexpr std::ranges::range_value_t<range_T>
+    extract(range_T&& r, iter_T i) {
+        using value_T = std::ranges::range_value_t<range_T>;
+
+        value_T data = std::move(*i);
         r.erase(i);
+
+        return data;
     }
-[[nodiscard]] constexpr std::ranges::range_value_t<range_T>
-extract(range_T&& r, iter_T i) {
-    using value_T = std::ranges::range_value_t<range_T>;
 
-    value_T data = std::move(*i);
-    r.erase(i);
+    template <std::ranges::input_range range_T>
+        requires requires(range_T& r) {
+            r.front();
+            r.erase(r.begin());
+        }
+    [[nodiscard]] constexpr std::ranges::range_value_t<range_T>
+    extract_front(range_T&& r) {
+        using value_T = std::ranges::range_value_t<range_T>;
 
-    return data;
-}
-
-template <std::ranges::input_range range_T>
-    requires requires(range_T& r) {
-        r.front();
+        value_T data = std::move(r.front());
         r.erase(r.begin());
+
+        return data;
     }
-[[nodiscard]] constexpr std::ranges::range_value_t<range_T>
-extract_front(range_T&& r) {
-    using value_T = std::ranges::range_value_t<range_T>;
 
-    value_T data = std::move(r.front());
-    r.erase(r.begin());
+    template <std::ranges::bidirectional_range range_T>
+        requires requires(range_T& r) {
+            r.back();
+            r.erase(std::prev(r.end()));
+        }
+    [[nodiscard]] constexpr std::ranges::range_value_t<range_T>
+    extract_back(range_T&& r) {
+        using value_T = std::ranges::range_value_t<range_T>;
 
-    return data;
-}
-
-template <std::ranges::bidirectional_range range_T>
-    requires requires(range_T& r) {
-        r.back();
+        value_T data = std::move(r.back());
         r.erase(std::prev(r.end()));
+
+        return data;
     }
-[[nodiscard]] constexpr std::ranges::range_value_t<range_T>
-extract_back(range_T&& r) {
-    using value_T = std::ranges::range_value_t<range_T>;
-
-    value_T data = std::move(r.back());
-    r.erase(std::prev(r.end()));
-
-    return data;
 }
 
 #endif //QTIP_STDHELPERS_H
