@@ -5,7 +5,7 @@
 
 #include <array>
 #include <string>
-#include "Keys.h"
+#include "Scancode.h"
 #include "Q-Tip/Events/Event.h"
 #include "Q-Tip/Mods/Moddable.h"
 
@@ -20,13 +20,13 @@ public:
     Input();
 
     [[nodiscard]]
-    bool keyDown(Key key) const;
+    bool keyDown(Scancode key) const;
 
     [[nodiscard]]
-    bool keyWasPressed(Key key) const;
+    bool keyWasPressed(Scancode key) const;
 
     [[nodiscard]]
-    bool keyWasReleased(Key key) const;
+    bool keyWasReleased(Scancode key) const;
 
     [[nodiscard]]
     bool mouseButtonDown(MouseButton button) const;
@@ -57,7 +57,7 @@ private:
     void processEvent(const Event& event);
 
     static constexpr std::size_t KeyCount =
-        static_cast<std::size_t>(Key::Key_COUNT);
+        static_cast<std::size_t>(Scancode::COUNT);
 
     std::array<bool, KeyCount> _keys{};
     std::array<bool, KeyCount> _pressed{};

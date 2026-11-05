@@ -11,7 +11,7 @@ namespace {
         return static_cast<std::size_t>(button);
     }
 
-    constexpr std::size_t keyIndex(Key key)
+    constexpr std::size_t keyIndex(Scancode key)
     {
         return static_cast<std::size_t>(key);
     }
@@ -28,7 +28,7 @@ Input::Input()
     _mouseReleased.fill(false);
 }
 
-bool Input::keyDown(Key key) const
+bool Input::keyDown(Scancode key) const
 {
     const auto index = keyIndex(key);
 
@@ -38,7 +38,7 @@ bool Input::keyDown(Key key) const
     return _keys[index];
 }
 
-bool Input::keyWasPressed(Key key) const
+bool Input::keyWasPressed(Scancode key) const
 {
     const auto index = keyIndex(key);
 
@@ -48,7 +48,7 @@ bool Input::keyWasPressed(Key key) const
     return _pressed[index];
 }
 
-bool Input::keyWasReleased(Key key) const
+bool Input::keyWasReleased(Scancode key) const
 {
     const auto index = keyIndex(key);
 

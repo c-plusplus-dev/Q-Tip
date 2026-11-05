@@ -12,7 +12,8 @@
 #include "Q-Tip/Math/Point.h"
 
 #include "EventType.h"
-#include "Q-Tip/Window/Keys.h"
+#include "Q-Tip/Window/Keycode.h"
+#include "Q-Tip/Window/Scancode.h"
 
 QTIP_CODE_BEGIN
     enum class DisplayOrientation {
@@ -42,8 +43,8 @@ struct WindowEvent {
 };
 
 struct KeyEvent {
-    Key key;
-    std::int32_t scancode;
+    Keycode key;
+    Scancode scancode;
 
     std::uint16_t modifiers;
 
