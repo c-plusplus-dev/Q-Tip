@@ -8,6 +8,7 @@
 #include <type_traits>
 #include <utility>
 #include <vector>
+#include <stdexcept>
 
 template <typename T>
 class Lazy {
@@ -64,7 +65,7 @@ public:
 
     private:
         F _callback;
-        std::invoke_result_t<F> _old;
+        std::decay_t<std::invoke_result_t<F>> _old;
     };
 
     // make
@@ -108,6 +109,9 @@ public:
         U* value,
         Comparator comparator = {}
     ) {
+        if (!value)
+            throw std::invalid_argument("Lazy dependency cannot be null");
+
         _deps.push_back(
             std::make_unique<TypedDependency<U, Comparator>>(
                 value,
@@ -152,11 +156,12 @@ public:
             if (!_function)
                 throw std::bad_function_call();
 
-            _value = _function();
+            T result = _function();
 
             for (auto& dependency : _deps)
                 dependency->update();
 
+            _value = std::move(result);
             _invalid = false;
         }
 
@@ -176,7 +181,7 @@ public:
 
     void reset() const {
         _value.reset();
-        _invalid = false;
+        _invalid = true;
     }
 
     template <typename... Args>
