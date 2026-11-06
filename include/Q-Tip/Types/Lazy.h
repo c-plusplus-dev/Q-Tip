@@ -74,6 +74,10 @@ public:
         return get();
     }
 
+    T operator()() const {
+        return get();
+    }
+
 private:
     std::function<T()> _function;
     mutable std::vector<std::unique_ptr<Dependency>> _deps;
