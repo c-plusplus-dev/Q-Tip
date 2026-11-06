@@ -1,14 +1,19 @@
+
 #ifndef QTIP_LAZY_H
 #define QTIP_LAZY_H
 
 #include <functional>
 #include <memory>
+#include <optional>
+#include <type_traits>
 #include <utility>
 #include <vector>
-#include <optional>
 
 template <typename T>
 class Lazy {
+public:
+    // deps
+
     class Dependency {
     public:
         virtual ~Dependency() = default;
@@ -17,15 +22,19 @@ class Lazy {
         virtual void update() = 0;
     };
 
-    template <typename U>
-    class TypedDependency : public Dependency {
+    template <typename U, typename Comparator = std::equal_to<>>
+    class TypedDependency final : public Dependency {
     public:
-        explicit TypedDependency(U* value)
+        explicit TypedDependency(
+            U* value,
+            Comparator comparator = {}
+        )
             : _value(value),
-              _old(*value) {}
+              _old(*value),
+              _comparator(std::move(comparator)) {}
 
         [[nodiscard]] bool changed() const override {
-            return *_value != _old;
+            return !_comparator(*_value, _old);
         }
 
         void update() override {
@@ -35,56 +44,99 @@ class Lazy {
     private:
         U* _value;
         U _old;
+        Comparator _comparator;
     };
 
-public:
-    template <typename F, typename... Deps>
-    Lazy(F function, Deps*... deps)
-        : _function(std::move(function)) {
-        (_deps.push_back(
-            std::make_unique<TypedDependency<Deps>>(deps)
-        ), ...);
-    }
+    template <typename F>
+    class CallbackDependency final : public Dependency {
+    public:
+        explicit CallbackDependency(F callback)
+            : _callback(std::move(callback)),
+              _old(_callback()) {}
 
-    template <typename F, typename... Deps>
-    void init(F function, Deps*... deps) {
-        _function = std::move(function);
-
-        _deps.clear();
-
-        (_deps.push_back(
-            std::make_unique<TypedDependency<Deps>>(deps)
-        ), ...);
-
-        _value.reset();
-    }
-
-    T get() const {
-        if (!_value || dependenciesChanged()) {
-            _value = _function();
-
-            for (auto& dependency : _deps)
-                dependency->update();
+        [[nodiscard]] bool changed() const override {
+            return _callback() != _old;
         }
 
-        return *_value;
+        void update() override {
+            _old = _callback();
+        }
+
+    private:
+        F _callback;
+        std::invoke_result_t<F> _old;
+    };
+
+    // make
+
+    template <typename F, typename... Deps>
+    explicit Lazy(F&& function, Deps*... deps)
+        : _function(std::forward<F>(function)) {
+        addDependencies(deps...);
     }
 
-    operator T() const {
-        return get();
+    Lazy() = default;
+
+    Lazy(const Lazy&) = delete;
+    Lazy& operator=(const Lazy&) = delete;
+
+    Lazy(Lazy&&) noexcept = default;
+    Lazy& operator=(Lazy&&) noexcept = default;
+
+    // init
+
+    template <typename F, typename... Deps>
+    void init(F&& function, Deps*... deps) {
+        _function = std::forward<F>(function);
+
+        _deps.clear();
+        addDependencies(deps...);
+
+        reset();
     }
 
-    T operator()() const {
-        return get();
+    template <typename F>
+    void setFunction(F&& function) {
+        _function = std::forward<F>(function);
+        invalidate();
     }
 
-private:
-    std::function<T()> _function;
-    mutable std::vector<std::unique_ptr<Dependency>> _deps;
+    // deps
 
-    mutable std::optional<T> _value;
+    template <typename U, typename Comparator = std::equal_to<>>
+    void addDependency(
+        U* value,
+        Comparator comparator = {}
+    ) {
+        _deps.push_back(
+            std::make_unique<TypedDependency<U, Comparator>>(
+                value,
+                std::move(comparator)
+            )
+        );
 
-    bool dependenciesChanged() const {
+        invalidate();
+    }
+
+    template <typename F>
+    void addCallbackDependency(F&& callback) {
+        using Callback = std::decay_t<F>;
+
+        _deps.push_back(
+            std::make_unique<CallbackDependency<Callback>>(
+                std::forward<F>(callback)
+            )
+        );
+
+        invalidate();
+    }
+
+    void clearDependencies() {
+        _deps.clear();
+        invalidate();
+    }
+
+    [[nodiscard]] bool dependenciesChanged() const {
         for (const auto& dependency : _deps) {
             if (dependency->changed())
                 return true;
@@ -92,6 +144,103 @@ private:
 
         return false;
     }
+
+    // eval
+
+    const T& get() const {
+        if (!_value || _invalid || dependenciesChanged()) {
+            if (!_function)
+                throw std::bad_function_call();
+
+            _value = _function();
+
+            for (auto& dependency : _deps)
+                dependency->update();
+
+            _invalid = false;
+        }
+
+        return *_value;
+    }
+
+    const T& refresh() const {
+        invalidate();
+        return get();
+    }
+
+    // i like cahce
+
+    void invalidate() const {
+        _invalid = true;
+    }
+
+    void reset() const {
+        _value.reset();
+        _invalid = false;
+    }
+
+    template <typename... Args>
+    void emplace(Args&&... args) const {
+        _value.emplace(std::forward<Args>(args)...);
+
+        for (auto& dependency : _deps)
+            dependency->update();
+
+        _invalid = false;
+    }
+
+    [[nodiscard]] bool hasValue() const {
+        return _value.has_value();
+    }
+
+    [[nodiscard]] bool isValid() const {
+        return _value.has_value()
+            && !_invalid
+            && !dependenciesChanged();
+    }
+
+    [[nodiscard]] bool isDirty() const {
+        return !isValid();
+    }
+
+    template <typename U>
+    T valueOr(U&& fallback) const {
+        if (isValid())
+            return *_value;
+
+        return std::forward<U>(fallback);
+    }
+
+    // ops
+
+    operator const T&() const {
+        return get();
+    }
+
+    const T& operator()() const {
+        return get();
+    }
+
+    const T& operator*() const {
+        return get();
+    }
+
+    const T* operator->() const {
+        return &get();
+    }
+
+private:
+    template <typename F, typename... Deps>
+    void addDependencies(Deps*... deps) {
+        (addDependency(deps), ...);
+    }
+
+    std::function<T()> _function;
+
+    std::vector<std::unique_ptr<Dependency>> _deps;
+
+    mutable std::optional<T> _value;
+    mutable bool _invalid = false;
 };
 
 #endif // QTIP_LAZY_H
