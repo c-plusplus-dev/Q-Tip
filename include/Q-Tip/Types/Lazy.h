@@ -235,7 +235,7 @@ public:
     }
 
 private:
-    template <typename F, typename... Deps>
+    template <typename... Deps>
     void addDependencies(Deps*... deps) {
         (addDependency(deps), ...);
     }
