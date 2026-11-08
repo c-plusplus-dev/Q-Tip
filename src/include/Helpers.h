@@ -12,8 +12,8 @@
 #include <fstream>
 #include <iostream>
 #include <sstream>
-#include <cstring>
 #include <algorithm>
+#include <cstring>
 
 constexpr char PATH_SEPARATOR = '/';
 const std::string ROOT = "/";
@@ -23,7 +23,6 @@ const std::string ROOT = "/";
 #endif
 
 namespace fs = std::filesystem;
-using namespace std;
 
 static constexpr SDL_Color white = { 255, 255, 255, 255 };
 static constexpr SDL_Color black = { 0,   0,   0,   255 };
@@ -78,7 +77,7 @@ inline void DrawRoundedRect(SDL_Renderer* renderer, const SDL_FRect* rect, int r
     int w = static_cast<int>(rect->w);
     int h = static_cast<int>(rect->h);
 
-    r = min(r, min(w/2, h/2));
+    r = std::min(r, std::min(w/2, h/2));
 
     SDL_FRect horzRect;
     horzRect.x = static_cast<float>(x + r);
@@ -102,7 +101,7 @@ inline void DrawRoundedRect(SDL_Renderer* renderer, const SDL_FRect* rect, int r
 }
 
 inline void DrawRoundedRect(SDL_Renderer* renderer, int red, int green, int blue, int x, int y, int w, int h, int r) {
-    r = min(r, min(w/2, h/2));
+    r = std::min(r, std::min(w/2, h/2));
 
     SDL_FRect horzRect;
     horzRect.x = static_cast<float>(x + r);
@@ -479,7 +478,7 @@ inline int DecombineIntx2(uint64_t combined, int select) {
 inline uint64_t CalculateThumbHeightAndY(int scrollbarY, int trackHeight, float scrollPosition, float scrollRange) {
     int barMinHeight = 20;
 
-    int barHeight = max(static_cast<int>(1.0f / scrollRange * static_cast<float>(trackHeight)), barMinHeight);
+    int barHeight = std::max(static_cast<int>(1.0f / scrollRange * static_cast<float>(trackHeight)), barMinHeight);
     int barY = scrollbarY + static_cast<int>(scrollPosition * static_cast<float>(trackHeight - barHeight));
 
     return CombineIntx2(barHeight, barY);
@@ -494,7 +493,7 @@ inline void DrawScrollbar(SDL_Renderer* renderer, float scrollbarX, float scroll
     float trackHeight = height;
 
     // Compute thumb height and Y pos
-    float barHeight = max(1.0f / scrollRange * trackHeight, barMinHeight);
+    float barHeight = std::max(1.0f / scrollRange * trackHeight, barMinHeight);
     float barY = scrollbarY + scrollPosition * (trackHeight - barHeight);
 
     // Draw the track as a thick vertical line
@@ -535,13 +534,13 @@ inline bool PointInVB(float px, float py, const std::vector<SDL_Vertex>& vb) {
     return false;
 }
 
-inline string resourcePath() {
-    return string(SDL_GetBasePath()) + "../Resources/";
+inline std::string resourcePath() {
+    return std::string(SDL_GetBasePath()) + "../Resources/";
 }
 
 inline TTF_Font* loadFont(float ptsize) {
-    string resources = resourcePath();
-    string fontpath = resources + "JetBrainsMono-Regular.ttf";
+    std::string resources = resourcePath();
+    std::string fontpath = resources + "JetBrainsMono-Regular.ttf";
 
     TTF_Font* font = TTF_OpenFont(fontpath.c_str(), ptsize);
     if (!font) {
@@ -568,7 +567,7 @@ inline float ilerp(float a, float b, float value) {
 }
 
 inline float clamp(float value, float minimum, float maximum) {
-    return max(minimum, min(value, maximum));
+    return std::max(minimum, std::min(value, maximum));
 }
 
 inline std::vector<fs::path> getMostRecentFiles(
@@ -631,8 +630,8 @@ inline std::string toHumanTime(fs::file_time_type time) {
 }
 
 inline std::string readFile(const fs::path &path) {
-    ifstream file(path);
-    ostringstream oss;
+    std::ifstream file(path);
+    std::ostringstream oss;
     oss << file.rdbuf();
 
     return oss.str();

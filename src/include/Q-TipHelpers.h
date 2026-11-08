@@ -7,6 +7,7 @@
 
 #include <Q-Tip/Events/Event.h>
 #include <SDL3/SDL.h>
+#include <cstring>
 using namespace QTip;
 
 template<std::size_t N>

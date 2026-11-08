@@ -52,6 +52,7 @@ add_library(QTip STATIC
         src/QTipRuntime.cpp
         include/Q-Tip/QTipRuntime.h
         src/include/stdHelpers.h
+        src/Logger/Log.cpp
 )
 
 add_library(QTip::QTip ALIAS QTip)
