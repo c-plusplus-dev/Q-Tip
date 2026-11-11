@@ -14,6 +14,7 @@
 #include <sstream>
 #include <algorithm>
 #include <cstring>
+#include <SDL3_image/SDL_image.h>
 
 constexpr char PATH_SEPARATOR = '/';
 const std::string ROOT = "/";
@@ -26,6 +27,14 @@ namespace fs = std::filesystem;
 
 static constexpr SDL_Color white = { 255, 255, 255, 255 };
 static constexpr SDL_Color black = { 0,   0,   0,   255 };
+
+struct err {
+    std::string error;
+};
+
+namespace help_err {
+    inline err error;
+}
 
 inline void DrawFilledCircleQuarter(SDL_Renderer* renderer, int ccx, int ccy, int r, int corner)
 {
@@ -635,6 +644,63 @@ inline std::string readFile(const fs::path &path) {
     oss << file.rdbuf();
 
     return oss.str();
+}
+
+inline SDL_Texture* loadTexture(SDL_Renderer* renderer, const std::filesystem::path& path) {
+    const std::string filename = path.string();
+
+    // Try the normal loading path first.
+    SDL_Texture* texture = IMG_LoadTexture(renderer, filename.c_str());
+
+    if (texture) {
+        return texture;
+    }
+
+    // Normal loading failed. Check whether this is actually a PNG.
+    SDL_IOStream* io = SDL_IOFromFile(filename.c_str(), "rb");
+
+    if (!io) {
+        help_err::error.error = fmt("Failed to open image '%s': %s", filename.c_str(), SDL_GetError());
+        return nullptr;
+    }
+
+    Uint8 signature[4]{};
+
+    const size_t bytesRead = SDL_ReadIO(io, signature, sizeof(signature));
+
+    const bool isPNG =
+        bytesRead == sizeof(signature) &&
+        signature[0] == 0x89 &&
+        signature[1] == 'P' &&
+        signature[2] == 'N' &&
+        signature[3] == 'G';
+
+    if (!isPNG) {
+        SDL_CloseIO(io);
+
+        help_err::error.error = fmt("IMG_LoadTexture failed for '%s': %s", filename.c_str(), SDL_GetError());
+        return nullptr;
+    }
+
+    // PNG fallback: bypass automatic format detection.
+    SDL_SeekIO(io, 0, SDL_IO_SEEK_SET);
+
+    SDL_Surface* surface = IMG_LoadPNG_IO(io);
+    SDL_CloseIO(io);
+
+    if (!surface) {
+        help_err::error.error = fmt("PNG decoding failed for '%s': %s", filename.c_str(), SDL_GetError());
+        return nullptr;
+    }
+
+    texture = SDL_CreateTextureFromSurface(renderer, surface);
+    SDL_DestroySurface(surface);
+
+    if (!texture) {
+        help_err::error.error = fmt("PNG texture creation failed for '%s': %s", filename.c_str(), SDL_GetError());
+    }
+
+    return texture;
 }
 
 #endif // HELPERS_H

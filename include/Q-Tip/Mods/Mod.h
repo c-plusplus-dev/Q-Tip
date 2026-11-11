@@ -5,6 +5,7 @@
 #ifndef QTIP_MODINIT_H
 #define QTIP_MODINIT_H
 #include <string>
+#include <cstdarg>
 #include <Q-Tip/Config.h>
 #include <Q-Tip/Logger/Log.h>
 #include "Q-Tip/Events/Event.h"

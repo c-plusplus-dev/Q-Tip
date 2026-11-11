@@ -84,3 +84,5 @@ homebrew-q-tip
 push.sh
 
 /cmake-*
+
+!build-windows.sh

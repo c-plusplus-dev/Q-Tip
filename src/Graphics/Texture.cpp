@@ -11,10 +11,10 @@
 QTIP_CODE_BEGIN
 
 Texture::Texture(Window& window, const std::filesystem::path& path) {
-    _texture = IMG_LoadTexture(window.getRenderer(), path.string().c_str());
+    _texture = loadTexture(window.getRenderer(), path);
 
     if (!_texture) {
-        QTipLog(fmt("IMG_LoadTexture failed: %s", SDL_GetError()), LOG_ERROR);
+        QTipLog(help_err::error.error, LOG_ERROR);
     }
 }
 
