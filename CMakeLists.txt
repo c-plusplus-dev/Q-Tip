@@ -53,6 +53,8 @@ add_library(QTip STATIC
         include/Q-Tip/QTipRuntime.h
         src/include/stdHelpers.h
         src/Logger/Log.cpp
+        src/Graphics/GPU/FragmentShader.cpp
+        include/Q-Tip/Graphics/GPU/FragmentShader.h
 )
 
 add_library(QTip::QTip ALIAS QTip)
