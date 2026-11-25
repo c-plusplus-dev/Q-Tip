@@ -84,6 +84,71 @@ const Event* QTipRuntime::peekEvent() {
     return &instance._events.front();
 }
 
+void QTipRuntime::setErrorMode(ErrorMode mode) {
+    instance._mode = mode;
+}
+
+ErrorMode QTipRuntime::getErrorMode() {
+    return instance._mode;
+}
+
+void QTipRuntime::reportError(
+    const char* title,
+    const char* message,
+    ErrorLevel level
+) {
+    if (level == ErrorLevel::Warning) {
+        QTipLog(message, LOG_WARNING);
+        return;
+    }
+
+    if (level == ErrorLevel::Error) {
+        QTipLog(message, LOG_ERROR);
+        return;
+    }
+
+    // Fatal error
+    switch (instance._mode) {
+    case ErrorMode::DialogAndExit:
+        if (!SDL_ShowSimpleMessageBox(
+            SDL_MESSAGEBOX_ERROR,
+            title,
+            message,
+            nullptr
+        )) {
+            QTipLog(
+                "Could not display fatal error dialog.",
+                LOG_ERROR
+            );
+            QTipLog(message, LOG_FATAL);
+        }
+
+        std::exit(EXIT_FAILURE);
+
+    case ErrorMode::Exit:
+        QTipLog(message, LOG_FATAL);
+        std::exit(EXIT_FAILURE);
+
+    case ErrorMode::Dialog:
+        if (!SDL_ShowSimpleMessageBox(
+            SDL_MESSAGEBOX_ERROR,
+            title,
+            message,
+            nullptr
+        )) {
+            QTipLog(message, LOG_FATAL);
+        }
+        return;
+
+    case ErrorMode::Continue:
+        QTipLog(message, LOG_FATAL);
+        return;
+
+    case ErrorMode::Ignore:
+        return;
+    }
+}
+
 void QTipRuntime::registerWindow(Window* window) {
     instance._windows.push_back(window);
 }

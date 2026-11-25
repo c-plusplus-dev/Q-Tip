@@ -15,6 +15,20 @@ QTIP_CODE_BEGIN
 
 class Window;
 
+enum class ErrorMode {
+    DialogAndExit,
+    Exit,
+    Dialog,
+    Continue,
+    Ignore
+};
+
+enum class ErrorLevel {
+    Warning,
+    Error,
+    Fatal
+};
+
 class QTipRuntime {
 public:
 
@@ -25,6 +39,11 @@ public:
     static std::optional<Event> pollEvent();
     static const Event* peekEvent();
 
+    static void setErrorMode(ErrorMode mode);
+    static ErrorMode getErrorMode();
+
+    static void reportError(const char* title, const char* message, ErrorLevel level);
+
 private:
     QTipRuntime();
 
@@ -33,6 +52,8 @@ private:
     std::deque<Event> _events;
 
     std::vector<Window*> _windows;
+
+    ErrorMode _mode;
 
     static void registerWindow(Window* window);
     static void unregisterWindow(Window* window);

@@ -8,6 +8,7 @@
 #include "../include/Helpers.h"
 #include <Q-Tip/Logger/Log.h>
 #include "earcut.hpp"
+#include "Q-Tip/QTipRuntime.h"
 #include "Q-Tip/Graphics/RenderTexture.h"
 #include "Q-Tip/Mods/ModLoader/ModLoader.h"
 #include "Q-Tip/Window/Window.h"
@@ -34,11 +35,34 @@ QTIP_CODE_BEGIN
 
 Renderer::Renderer(SDL_Window* window) {
     if (!window) return;
+
     _renderer = SDL_CreateGPURenderer(nullptr, window);
+
     if (!_renderer) {
-        QTipLog(fmt("SDL_CreateGPURenderer failed: %s", SDL_GetError()), LOG_FATAL);
-        exit(1);
+        const std::string gpuError = SDL_GetError();
+
+        QTipLog(
+            fmt(
+                "SDL GPU renderer initialization failed: %s. "
+                "Falling back to SDL renderer.",
+                gpuError.c_str()
+            ),
+            LOG_WARNING
+        );
+
+        _renderer = SDL_CreateRenderer(window, nullptr);
+
+        if (!_renderer) {
+            QTipRuntime::reportError(
+                "Oh no!",
+                "The application has encountered an error that may leave the application in an unusable state. "
+                "Please contact the creator of the application.",
+                ErrorLevel::Fatal
+            );
+            return;
+        }
     }
+
     SDL_SetDefaultTextureScaleMode(
         _renderer,
         SDL_SCALEMODE_NEAREST

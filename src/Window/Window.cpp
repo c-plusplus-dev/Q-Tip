@@ -7,7 +7,6 @@
 #include <utility>
 
 #include "../include/Helpers.h"
-#include <Q-Tip/Logger/Log.h>
 
 #include <SDL3/SDL.h>
 
@@ -109,7 +108,12 @@ void Window::open(const char* title, float width, float height) {
     );
 
     if (!_window) {
-        QTipLog(fmt("SDL_CreateWindow failed: %s", SDL_GetError()), LOG_ERROR);
+        QTipRuntime::reportError(
+            "Whoa oh!",
+            "The application has encountered an error that may leave the application in an unusable state. "
+            "Please contact the creator of the application.",
+            ErrorLevel::Fatal
+        );
         return;
     }
 
