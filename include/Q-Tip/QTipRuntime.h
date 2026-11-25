@@ -53,7 +53,7 @@ private:
 
     std::vector<Window*> _windows;
 
-    ErrorMode _mode;
+    ErrorMode _mode = ErrorMode::DialogAndExit;
 
     static void registerWindow(Window* window);
     static void unregisterWindow(Window* window);

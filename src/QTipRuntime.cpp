@@ -19,7 +19,7 @@ QTIP_CODE_BEGIN
 QTipRuntime QTipRuntime::instance;
 
 QTipRuntime::QTipRuntime() {
-    if (!SDL_Init(SDL_INIT_VIDEO)) {
+    if (!SDL_Init(SDL_INIT_VIDEO | SDL_INIT_GAMEPAD)) {
         QTipLog(fmt("SDL_Init failed: %s", SDL_GetError()), LOG_FATAL);
         exit(1);
     }

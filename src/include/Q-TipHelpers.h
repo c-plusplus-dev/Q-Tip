@@ -453,6 +453,69 @@ inline std::optional<Event> translateEvent(const SDL_Event& event)
             return result;
         }
 
+        // Gamepad
+
+        case SDL_EVENT_GAMEPAD_ADDED:
+        case SDL_EVENT_GAMEPAD_REMOVED:
+        {
+            Event result = makeEvent(
+                event.type == SDL_EVENT_GAMEPAD_ADDED
+                    ? EventType::GamepadConnected
+                    : EventType::GamepadDisconnected,
+                0,
+                event.gdevice.timestamp
+            );
+
+            result.gamepadConnection = {
+                event.gdevice.which
+            };
+
+            return result;
+        }
+
+        case SDL_EVENT_GAMEPAD_BUTTON_DOWN:
+        case SDL_EVENT_GAMEPAD_BUTTON_UP:
+        {
+            Event result = makeEvent(
+                event.type == SDL_EVENT_GAMEPAD_BUTTON_DOWN
+                    ? EventType::GamepadButtonPressed
+                    : EventType::GamepadButtonReleased,
+                0,
+                event.gbutton.timestamp
+            );
+
+            result.gamepadButton = {
+                event.gbutton.which,
+                static_cast<GamepadButton>(event.gbutton.button)
+            };
+
+            return result;
+        }
+
+        case SDL_EVENT_GAMEPAD_AXIS_MOTION:
+        {
+            Event result = makeEvent(
+                EventType::GamepadAxisMoved,
+                0,
+                event.gaxis.timestamp
+            );
+
+            constexpr float positiveRange = 32767.0f;
+            constexpr float negativeRange = 32768.0f;
+
+            const float value = event.gaxis.value >= 0
+                ? static_cast<float>(event.gaxis.value) / positiveRange
+                : static_cast<float>(event.gaxis.value) / negativeRange;
+
+            result.gamepadAxis = {
+                event.gaxis.which,
+                static_cast<GamepadAxis>(event.gaxis.axis),
+                value
+            };
+
+            return result;
+        }
+
         default:
             return std::nullopt;
     }

@@ -95,21 +95,73 @@ struct ClipboardEvent {
     bool containsText;
 };
 
-//struct GamepadConnectionEvent {
-//    std::uint32_t gamepadID;
-//};
+enum class GamepadButton : std::uint8_t {
+    South,
+    East,
+    West,
+    North,
 
-//struct GamepadButtonEvent {
-//    std::uint32_t gamepadID;
-//    std::uint8_t button;
-//};
+    Back,
+    Guide,
+    Start,
 
-//struct GamepadAxisEvent {
-//    std::uint32_t gamepadID;
-//    std::uint8_t axis;
+    LeftStick,
+    RightStick,
 
-//    float value;
-//};
+    LeftShoulder,
+    RightShoulder,
+
+    DPadUp,
+    DPadDown,
+    DPadLeft,
+    DPadRight,
+
+    Miscellaneous1,
+    RightPaddle1,
+    LeftPaddle1,
+    RightPaddle2,
+    LeftPaddle2,
+
+    Touchpad,
+
+    Miscellaneous2,
+    Miscellaneous3,
+    Miscellaneous4,
+    Miscellaneous5,
+    Miscellaneous6,
+
+    Count
+};
+
+enum class GamepadAxis : std::uint8_t {
+    LeftX,
+    LeftY,
+    RightX,
+    RightY,
+
+    LeftTrigger,
+    RightTrigger,
+
+    Count
+};
+
+typedef std::uint32_t GamepadID;
+
+struct GamepadConnectionEvent {
+    GamepadID gamepadID;
+};
+
+struct GamepadButtonEvent {
+    GamepadID gamepadID;
+    GamepadButton button;
+};
+
+struct GamepadAxisEvent {
+    GamepadID gamepadID;
+    GamepadAxis axis;
+
+    float value;
+};
 
 //struct TouchEvent {
 //    std::uint64_t touchID;
@@ -152,9 +204,9 @@ struct Event {
         FileDropEvent fileDrop;
         ClipboardEvent clipboard;
 
-        //GamepadConnectionEvent gamepadConnection;
-        //GamepadButtonEvent gamepadButton;
-        //GamepadAxisEvent gamepadAxis;
+        GamepadConnectionEvent gamepadConnection;
+        GamepadButtonEvent gamepadButton;
+        GamepadAxisEvent gamepadAxis;
 
         //TouchEvent touch;
         //PenEvent pen;

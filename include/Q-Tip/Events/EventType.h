@@ -46,11 +46,11 @@ enum class EventType {
     ClipboardChanged,
 
     // Gamepad
-    //GamepadConnected,
-    //GamepadDisconnected,
-    //GamepadButtonPressed,
-    //GamepadButtonReleased,
-    //GamepadAxisMoved,
+    GamepadConnected,
+    GamepadDisconnected,
+    GamepadButtonPressed,
+    GamepadButtonReleased,
+    GamepadAxisMoved,
 
     // Touch
     //TouchBegan,
