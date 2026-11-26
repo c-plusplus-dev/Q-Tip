@@ -23,6 +23,13 @@ QTIP_CODE_BEGIN
 QTipRuntime QTipRuntime::instance;
 
 QTipRuntime::QTipRuntime() {
+    if (QTipConfig_GamepadBackgroundEvent) {
+        SDL_SetHint(
+            SDL_HINT_JOYSTICK_ALLOW_BACKGROUND_EVENTS,
+            "1"
+        );
+    }
+
     if (!SDL_Init(SDL_INIT_VIDEO | SDL_INIT_GAMEPAD)) {
         QTipLog(fmt("SDL_Init failed: %s", SDL_GetError()), LOG_FATAL);
         exit(1);
