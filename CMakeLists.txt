@@ -55,6 +55,7 @@ add_library(QTip STATIC
         src/Logger/Log.cpp
         src/Graphics/GPU/FragmentShader.cpp
         include/Q-Tip/Graphics/GPU/FragmentShader.h
+        include/Q-Tip/Gamepad.h
 )
 
 add_library(QTip::QTip ALIAS QTip)
@@ -83,6 +84,10 @@ add_library(QTipGamepad STATIC
 )
 
 add_library(QTip::Gamepad ALIAS QTipGamepad)
+
+set_target_properties(QTipGamepad PROPERTIES
+    EXPORT_NAME Gamepad
+)
 
 target_include_directories(QTipGamepad
     PUBLIC
