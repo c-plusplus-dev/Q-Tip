@@ -75,6 +75,26 @@ target_link_libraries(QTip
         SDL3_image::SDL3_image
 )
 
+add_library(QTipGamepad STATIC
+        src/Gamepad/Gamepad.cpp
+        include/Q-Tip/Gamepad/Gamepad.h
+        src/Gamepad/GamepadManager.cpp
+        include/Q-Tip/Gamepad/GamepadManager.h
+)
+
+add_library(QTip::Gamepad ALIAS QTipGamepad)
+
+target_include_directories(QTipGamepad
+    PUBLIC
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+        $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
+)
+
+target_link_libraries(QTipGamepad
+    PUBLIC
+        QTip::QTip
+)
+
 include(CMakePackageConfigHelpers)
 
 configure_package_config_file(
@@ -125,7 +145,7 @@ target_link_libraries(QTipShapeTest
 )
 
 install(
-    TARGETS QTip
+    TARGETS QTip QTipGamepad
     EXPORT QTipTargets
     ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
