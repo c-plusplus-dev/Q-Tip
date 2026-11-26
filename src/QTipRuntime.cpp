@@ -14,6 +14,10 @@
 #include "Q-Tip/Mods/ModLoader/ModLoader.h"
 #include "Q-Tip/Window/Window.h"
 
+namespace {
+    std::unordered_map<GamepadID, SDL_Gamepad*> gamepads;
+}
+
 QTIP_CODE_BEGIN
 
 QTipRuntime QTipRuntime::instance;
@@ -28,10 +32,18 @@ QTipRuntime::QTipRuntime() {
         QTipLog(fmt("TTF_Init failed: %s", SDL_GetError()), LOG_FATAL);
         exit(1);
     }
+
+    SDL_SetGamepadEventsEnabled(true);
 }
 
 QTipRuntime::~QTipRuntime() {
     TTF_Quit();
+
+    for (auto& [id, gamepad] : gamepads)
+        SDL_CloseGamepad(gamepad);
+
+    gamepads.clear();
+
     SDL_Quit();
 }
 
@@ -42,6 +54,32 @@ void QTipRuntime::fetchEvents() {
     SDL_Event e;
     instance._events.clear();
     while (SDL_PollEvent(&e)) {
+        if (e.type == SDL_EVENT_GAMEPAD_ADDED) {
+            const auto id = e.gdevice.which;
+
+            if (!gamepads.contains(id)) {
+                SDL_Gamepad* gamepad = SDL_OpenGamepad(id);
+
+                if (!gamepad) {
+                    QTipLog(
+                        fmt("Failed to open gamepad: %s", SDL_GetError()),
+                        LOG_WARNING
+                    );
+                } else {
+                    gamepads.emplace(id, gamepad);
+                }
+            }
+        }
+
+        else if (e.type == SDL_EVENT_GAMEPAD_REMOVED) {
+            const auto id = e.gdevice.which;
+
+            if (auto it = gamepads.find(id); it != gamepads.end()) {
+                SDL_CloseGamepad(it->second);
+                gamepads.erase(it);
+            }
+        }
+
         if (auto event = translateEvent(e)) {
             instance._events.push_back(event.value());
         } else
