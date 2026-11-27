@@ -44,6 +44,8 @@ public:
 
     static void reportError(const char* title, const char* message, ErrorLevel level);
 
+    static void gamepadReceivesEventsInBackground(bool receives);
+
 private:
     QTipRuntime();
 
