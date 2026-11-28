@@ -33,6 +33,27 @@ namespace mapbox::util {
 
 QTIP_CODE_BEGIN
 
+namespace {
+    std::vector<int> triangulatePolygon(
+        const std::vector<Vertex>& vertices
+    ) {
+        std::vector<std::vector<Point>> rings(1);
+
+        rings[0].reserve(vertices.size());
+
+        for (const Vertex& vertex : vertices) {
+            rings[0].push_back(vertex.position);
+        }
+
+        const auto earcutIndices = mapbox::earcut<uint32_t>(rings);
+
+        return {
+            earcutIndices.begin(),
+            earcutIndices.end()
+        };
+    }
+}
+
 Renderer::Renderer(SDL_Window* window) {
     if (!window) return;
 
@@ -199,33 +220,15 @@ void Renderer::renderGeometry(
     const std::vector<Vertex>& vertices,
     const Texture* texture
 ) {
-    std::vector<SDL_Vertex> sdlVertices;
-    sdlVertices.reserve(vertices.size());
+    if (vertices.size() < 3)
+        return;
 
-    for (const Vertex& vertex : vertices) {
-        sdlVertices.push_back({
-            {vertex.position.x, vertex.position.y},
-            {
-                static_cast<float>(vertex.color.r) / 255.0f,
-                static_cast<float>(vertex.color.g) / 255.0f,
-                static_cast<float>(vertex.color.b) / 255.0f,
-                static_cast<float>(vertex.color.a) / 255.0f
-            },
-            {vertex.uv.x, vertex.uv.y}
-        });
-    }
+    const auto indices = triangulatePolygon(vertices);
 
-    SDL_RenderGeometry(
-        _renderer,
-        texture ? texture->nativeHandle() : nullptr,
-        sdlVertices.data(),
-        static_cast<int>(sdlVertices.size()),
-        nullptr,
-        0
-    );
+    renderGeometry(vertices, indices, texture);
 }
 
-void Renderer::renderGeometry(const std::vector<Vertex>& vertices, std::vector<int> indices, Texture* texture) {
+void Renderer::renderGeometry(const std::vector<Vertex>& vertices, const std::vector<int>& indices, const Texture* texture) {
     std::vector<SDL_Vertex> sdlVertices;
     sdlVertices.reserve(vertices.size());
 

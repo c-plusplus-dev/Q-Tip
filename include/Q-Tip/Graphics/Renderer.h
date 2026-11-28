@@ -77,7 +77,9 @@ public:
     void renderPolygon(Polygon polygon, bool filled = true);
 
     void renderGeometry(const std::vector<Vertex>& vertices, const Texture* texture = nullptr);
-    void renderGeometry(const std::vector<Vertex>& vertices, std::vector<int> indices,  Texture* texture = nullptr);
+
+    // Requires triangles
+    void renderGeometry(const std::vector<Vertex>& vertices, const std::vector<int>& indices, const Texture* texture = nullptr);
 
     void renderText(const Font& font, const char* text, float x, float y, Color color);
     void renderTextCentered(const Font& font, const char* text, float x, float y, Color color);
