@@ -39,6 +39,10 @@ public:
 
     void handleEvent(const Event& event);
 
+    void beginFrame();
+
+    void reset();
+
 private:
     static constexpr std::size_t ButtonCount =
         static_cast<std::size_t>(GamepadButton::Count);
@@ -59,10 +63,6 @@ private:
     float _deadzone = 0.15f;
 
     [[nodiscard]] Point applyDeadzone(Point stick) const;
-
-    void beginFrame();
-
-    void reset();
 };
 
 QTIP_CODE_END

@@ -27,6 +27,7 @@ void GamepadManager::handleEvent(const Event& event) {
     }
 
     for (auto& gamepad : _gamepads) {
+        gamepad->beginFrame();
         gamepad->handleEvent(event);
     }
 }
