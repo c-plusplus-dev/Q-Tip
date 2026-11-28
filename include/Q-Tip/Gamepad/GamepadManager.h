@@ -15,6 +15,8 @@ class GamepadManager {
 public:
     GamepadManager();
 
+    void beginEvents() const;
+
     void handleEvent(const Event& event);
 
     [[nodiscard]] Gamepad* primaryGamepad() const;

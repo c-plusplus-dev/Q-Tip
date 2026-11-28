@@ -8,6 +8,12 @@ QTIP_CODE_BEGIN
 
 GamepadManager::GamepadManager() = default;
 
+void GamepadManager::beginEvents() const {
+    for (auto& gamepad : _gamepads) {
+        gamepad->beginFrame();
+    }
+}
+
 void GamepadManager::handleEvent(const Event& event) {
     if (event.type == EventType::GamepadConnected) {
         if (!exists(event.gamepadConnection.gamepadID)) {
@@ -27,7 +33,6 @@ void GamepadManager::handleEvent(const Event& event) {
     }
 
     for (auto& gamepad : _gamepads) {
-        gamepad->beginFrame();
         gamepad->handleEvent(event);
     }
 }
