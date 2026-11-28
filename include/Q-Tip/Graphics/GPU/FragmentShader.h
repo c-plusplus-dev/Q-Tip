@@ -9,8 +9,9 @@
 
 #include <Q-Tip/Config.h>
 
-QTIP_CODE_BEGIN
+#include "Q-Tip/Graphics/Texture.h"
 
+QTIP_CODE_BEGIN
 class Renderer;
 
 class FragmentShader {
@@ -54,6 +55,11 @@ public:
             sizeof(T)
         );
     }
+
+    bool setTexture(
+        uint32_t slot,
+        const Texture& texture
+    );
 
 private:
     struct Impl;

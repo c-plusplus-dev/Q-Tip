@@ -1,5 +1,7 @@
+
 #include <Q-Tip/Graphics/GPU/FragmentShader.h>
 #include <Q-Tip/Graphics/Renderer.h>
+#include <Q-Tip/Graphics/Texture.h>
 
 #include <SDL3/SDL.h>
 
@@ -90,11 +92,11 @@ ShaderSource chooseShader(
 
     // Prefer portable SPIR-V, then native platform formats.
     constexpr std::array candidates = {
-        Candidate{SDL_GPU_SHADERFORMAT_SPIRV,   ".spv"},
-        Candidate{SDL_GPU_SHADERFORMAT_MSL,     ".msl"},
-        Candidate{SDL_GPU_SHADERFORMAT_METALLIB,".metallib"},
-        Candidate{SDL_GPU_SHADERFORMAT_DXIL,    ".dxil"},
-        Candidate{SDL_GPU_SHADERFORMAT_DXBC,    ".dxbc"}
+        Candidate{SDL_GPU_SHADERFORMAT_SPIRV,    ".spv"},
+        Candidate{SDL_GPU_SHADERFORMAT_MSL,      ".msl"},
+        Candidate{SDL_GPU_SHADERFORMAT_METALLIB, ".metallib"},
+        Candidate{SDL_GPU_SHADERFORMAT_DXIL,     ".dxil"},
+        Candidate{SDL_GPU_SHADERFORMAT_DXBC,     ".dxbc"}
     };
 
     for (const Candidate& candidate : candidates) {
@@ -127,6 +129,10 @@ struct FragmentShader::Impl {
 
     SDL_GPUShader* shader = nullptr;
     SDL_GPURenderState* state = nullptr;
+
+    SDL_GPUSampler* sampler = nullptr;
+
+    std::vector<SDL_GPUTextureSamplerBinding> samplerBindings;
 
     bool active = false;
 
@@ -193,6 +199,37 @@ struct FragmentShader::Impl {
             );
         }
 
+        // Create the default sampler.
+        if (numSamplers > 0) {
+            SDL_GPUSamplerCreateInfo samplerInfo{};
+
+            samplerInfo.min_filter = SDL_GPU_FILTER_LINEAR;
+            samplerInfo.mag_filter = SDL_GPU_FILTER_LINEAR;
+
+            samplerInfo.mipmap_mode =
+                SDL_GPU_SAMPLERMIPMAPMODE_NEAREST;
+
+            samplerInfo.address_mode_u =
+                SDL_GPU_SAMPLERADDRESSMODE_CLAMP_TO_EDGE;
+
+            samplerInfo.address_mode_v =
+                SDL_GPU_SAMPLERADDRESSMODE_CLAMP_TO_EDGE;
+
+            samplerInfo.address_mode_w =
+                SDL_GPU_SAMPLERADDRESSMODE_CLAMP_TO_EDGE;
+
+            sampler = SDL_CreateGPUSampler(
+                device,
+                &samplerInfo
+            );
+
+            if (!sampler) {
+                throw std::runtime_error(
+                    sdlError("Failed to create GPU sampler")
+                );
+            }
+        }
+
         SDL_GPURenderStateCreateInfo stateInfo{};
 
         stateInfo.fragment_shader = shader;
@@ -207,6 +244,12 @@ struct FragmentShader::Impl {
                 sdlError("Failed to create GPU render state")
             );
         }
+
+        samplerBindings.resize(numSamplers);
+
+        for (auto& binding : samplerBindings) {
+            binding.sampler = sampler;
+        }
     }
 
     void destroy() {
@@ -218,6 +261,11 @@ struct FragmentShader::Impl {
         if (state) {
             SDL_DestroyGPURenderState(state);
             state = nullptr;
+        }
+
+        if (sampler && device) {
+            SDL_ReleaseGPUSampler(device, sampler);
+            sampler = nullptr;
         }
 
         if (shader && device) {
@@ -316,6 +364,62 @@ bool FragmentShader::setUniform(
         data,
         size
     );
+}
+
+bool FragmentShader::setTexture(
+    uint32_t slot,
+    const Texture& texture
+) {
+    if (!isValid() ||
+        slot >= _impl->samplerBindings.size() ||
+        !texture.isValid() ||
+        !_impl->sampler) {
+        return false;
+    }
+
+    SDL_Texture* sdlTexture = texture.nativeHandle();
+
+    if (!sdlTexture) {
+        return false;
+    }
+
+    const SDL_PropertiesID properties =
+        SDL_GetTextureProperties(sdlTexture);
+
+    if (!properties) {
+        return false;
+    }
+
+    auto* gpuTexture =
+        static_cast<SDL_GPUTexture*>(
+            SDL_GetPointerProperty(
+                properties,
+                SDL_PROP_TEXTURE_GPU_TEXTURE_POINTER,
+                nullptr
+            )
+        );
+
+    if (!gpuTexture) {
+        return false;
+    }
+
+    // Preserve all other sampler slots.
+    auto bindings = _impl->samplerBindings;
+
+    bindings[slot].texture = gpuTexture;
+    bindings[slot].sampler = _impl->sampler;
+
+    if (!SDL_SetGPURenderStateSamplerBindings(
+        _impl->state,
+        static_cast<int>(bindings.size()),
+        bindings.data()
+    )) {
+        return false;
+    }
+
+    _impl->samplerBindings = std::move(bindings);
+
+    return true;
 }
 
 QTIP_CODE_END
