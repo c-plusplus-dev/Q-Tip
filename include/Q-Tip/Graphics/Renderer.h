@@ -39,6 +39,12 @@ enum class RenderBlendMode {
     Multiplied    = 0x00000008u
 };
 
+struct Vertex {
+    Point position{};
+    Color color;
+    Point uv{};
+};
+
 class Renderer {
 MODDABLE_ROOT(Renderer)
 
@@ -69,6 +75,9 @@ public:
     void renderCircle(Circle circle, bool filled = true);
     void renderTriangle(Triangle triangle, bool filled = true);
     void renderPolygon(Polygon polygon, bool filled = true);
+
+    void renderGeometry(const std::vector<Vertex>& vertices, const Texture* texture = nullptr);
+    void renderGeometry(const std::vector<Vertex>& vertices, std::vector<int> indices,  Texture* texture = nullptr);
 
     void renderText(const Font& font, const char* text, float x, float y, Color color);
     void renderTextCentered(const Font& font, const char* text, float x, float y, Color color);

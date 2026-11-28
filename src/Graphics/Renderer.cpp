@@ -195,6 +195,63 @@ void Renderer::renderPolygon(Polygon polygon, bool filled)
     }
 }
 
+void Renderer::renderGeometry(
+    const std::vector<Vertex>& vertices,
+    const Texture* texture
+) {
+    std::vector<SDL_Vertex> sdlVertices;
+    sdlVertices.reserve(vertices.size());
+
+    for (const Vertex& vertex : vertices) {
+        sdlVertices.push_back({
+            {vertex.position.x, vertex.position.y},
+            {
+                static_cast<float>(vertex.color.r) / 255.0f,
+                static_cast<float>(vertex.color.g) / 255.0f,
+                static_cast<float>(vertex.color.b) / 255.0f,
+                static_cast<float>(vertex.color.a) / 255.0f
+            },
+            {vertex.uv.x, vertex.uv.y}
+        });
+    }
+
+    SDL_RenderGeometry(
+        _renderer,
+        texture ? texture->nativeHandle() : nullptr,
+        sdlVertices.data(),
+        static_cast<int>(sdlVertices.size()),
+        nullptr,
+        0
+    );
+}
+
+void Renderer::renderGeometry(const std::vector<Vertex>& vertices, std::vector<int> indices, Texture* texture) {
+    std::vector<SDL_Vertex> sdlVertices;
+    sdlVertices.reserve(vertices.size());
+
+    for (const Vertex& vertex : vertices) {
+        sdlVertices.push_back({
+            {vertex.position.x, vertex.position.y},
+            {
+                static_cast<float>(vertex.color.r) / 255.0f,
+                static_cast<float>(vertex.color.g) / 255.0f,
+                static_cast<float>(vertex.color.b) / 255.0f,
+                static_cast<float>(vertex.color.a) / 255.0f
+            },
+            {vertex.uv.x, vertex.uv.y}
+        });
+    }
+
+    SDL_RenderGeometry(
+        _renderer,
+        texture ? texture->nativeHandle() : nullptr,
+        sdlVertices.data(),
+        static_cast<int>(sdlVertices.size()),
+        indices.data(),
+        static_cast<int>(indices.size())
+    );
+}
+
 void Renderer::renderText(const Font& font, const char* text, float x, float y, Color color) {
     setBlendMode(RenderBlendMode::None);
     ::renderText(font, _renderer, text, color, x, y);
